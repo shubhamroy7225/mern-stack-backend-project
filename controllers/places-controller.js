@@ -43,6 +43,21 @@ const getPlaceById = (req, res,next) => {
       Dummy_data.push(createPlace)
       res.send(createPlace)
   }
+  const updatePlaceById=(req,res,next)=>{
+      const {title,description}=req.body
+      const placeId = req.params.pid;
+      const updatedplace = {...Dummy_data.find(place=>place.id===placeId)}
+      updatedplace.title=title
+     updatedplace.description=description
+     const index = Dummy_data.findIndex(place=>place.id ===placeId)
+     Dummy_data[index]=updatedplace
+    res.status(200).json(updatedplace)
+  }
+  const deletePlaceById = ()=>{
+
+  }
   exports.getPlaceById=getPlaceById
   exports.getPlaceByUserId=getPlaceByUserId
   exports.createPlace = createPlace
+  exports.updatePlaceById=updatePlaceById
+  exports.deletePlaceById=deletePlaceById
