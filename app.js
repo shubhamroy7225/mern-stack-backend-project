@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require("mongoose");
 const bodyParser = require('body-parser')
 const placesRouter = require('./routes/places.route')
 const usersRouter = require('./routes/users.routes')
@@ -21,4 +22,11 @@ app.use((error,req,res,next)=>{
     res.json({message:error.message || 'An unknown error occurred'})
 
 })
-app.listen(5000)
+mongoose.connect(
+  "mongodb+srv://shubhamjayswal:DhtfcwpMRF1LPJ1t@cluster0.c0vfi.mongodb.net/productDatabase?retryWrites=true&w=majority"
+).then(()=>{
+  app.listen(5000)
+    console.log("Connected to database...")
+}).catch(()=>{
+    console.log('Connection failed');
+});

@@ -1,3 +1,4 @@
+const { validationResult } = require("express-validator");
 const { v4: uuid } = require("uuid");
 const HttpError = require("../models/http-error");
 
@@ -13,6 +14,11 @@ const getAllUser = (req, res, next) => {
 };
 
 const signup = (req, res, next) => {
+  
+  const error = validationResult(req)
+  if(!error.isEmpty()){
+    throw new HttpError('Fields can not be empty!')
+  }
   const { name, email, password } = req.body;
   const isEmail = Dummy_data.find(data=>data.email === email)
   if (isEmail) {
