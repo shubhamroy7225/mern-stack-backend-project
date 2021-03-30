@@ -48,15 +48,21 @@ const signup = async (req, res, next) => {
 
   res.json(createUser.toObject({ getters: true }));
 };
-const signin = (req, res, nex) => {
+const signin = async(req, res, next) => {
   const { email, password } = req.body;
-  const identifiedUser = Dummy_data.find((data) => data.email === email);
-  if (!identifiedUser) {
-    throw new HttpError("email is not found", 401);
-  } else if (identifiedUser && identifiedUser.password !== password) {
-    throw new HttpError("password in invalid!");
+  let userExist;
+  try {
+    userExist = await UserSchema.findOne({ email: email });
+  } catch (err) {
+    const error = new HttpError("Sign up failed paease try agan", 500);
+    return next(error);
   }
-  res.json({ message: "logged in!" });
+  if (!userExist) {
+    return next(new HttpError("email not exist", 401));
+  } else if (userExist && userExist.password !== password) {
+    return next(new HttpError("password in invalid!",401));
+  }
+ res.json({ message: "logged in!" });
 };
 exports.getAllUser = getAllUser;
 exports.signin = signin;
