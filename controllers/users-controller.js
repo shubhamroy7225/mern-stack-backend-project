@@ -10,17 +10,23 @@ const Dummy_data = [
     address: "20 w 34th st,New York, NY 1001",
   },
 ];
-const getAllUser = (req, res, next) => {
-  res.json(Dummy_data);
+const getAllUser = async(req, res, next) => {
+  let users
+  try{
+    users = await UserSchema.find()
+  }catch(err){
+    const error = new HttpError('Fetching users failed,please try again',500)
+    return next(error)
+  }
+  res.json(users.map(user=>user.toObject({getters:true})));
 };
 
 const signup = async (req, res, next) => {
   const error = validationResult(req);
-  console.log(error)
   if (!error.isEmpty()) {
     return next(new HttpError("Fields can not be empty!",222));
   }
-  const { name, email, password,places } = req.body;
+  const { name, email, password } = req.body;
   let userExist;
   try {
     userExist = await UserSchema.findOne({ email: email });
@@ -37,7 +43,7 @@ const signup = async (req, res, next) => {
     email,
     password,
     image: "https://homepages.cae.wisc.edu/~ece533/images/girl.png",
-    places
+    places:[]
   });
   try {
     await createUser.save();
