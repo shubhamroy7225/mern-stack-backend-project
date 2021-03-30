@@ -31,16 +31,24 @@ const getPlaceById = async (req, res, next) => {
   res.json(place);
 };
 
-const getPlacesByUserId = (req, res, next) => {
+const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
-  const places = Dummy_data.filter((place) => place.creator === userId);
+  // const places = Dummy_data.filter((place) => place.creator === userId);
+let places;
+  try{
+    places = await PlaceSchema.find({creator:userId})
+  }catch(err){
+    const error = new HttpError('could not find places',500)
+    return next(error)
+  }
   if (!places || places.longth === 0) {
     return next(
       new HttpError("Could not find a places for the provided user id.", 404)
     );
   }
-  res.json(places);
+  res.json(places.map(place=>place.toObject({getters:true})));
 };
+
 const createPlace = async (req, res, next) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
