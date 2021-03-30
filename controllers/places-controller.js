@@ -106,13 +106,16 @@ const updatePlaceById = async (req, res, next) => {
   res.json(place.toObject({ getters: true }));
   
 };
-const deletePlaceById = (req, res, next) => {
+const deletePlaceById = async(req, res, next) => {
   const placeId = req.params.pid;
-  if (!Dummy_data.find((place) => place.id == placeId)) {
-    throw new HttpError("Could not find a place for that id.", 404);
+  let place;
+  try{
+    place = await PlaceSchema.findByIdAndDelete(placeId)
+  }catch(err){
+    const error = new HttpError('can not delete the place please try again!',5000)
   }
-  Dummy_data = Dummy_data.filter((place) => place.id !== placeId);
-  res.status(200).json({ message: "place deleted" });
+  res.json({message:"place deleted"})
+  
 };
 exports.getPlaceById = getPlaceById;
 exports.getPlacesByUserId = getPlacesByUserId;
