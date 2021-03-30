@@ -4,7 +4,7 @@ const usersController = require("../controllers/users-controller");
 const router = express.Router();
 router.get("/",usersController.getAllUser);
 router.post("/signup", 
-[check("title").not().isEmpty(),
+[check("name").not().isEmpty(),
 check('email').normalizeEmail().isEmail(),
 check('password').isLength({min:6})],
 usersController.signup);

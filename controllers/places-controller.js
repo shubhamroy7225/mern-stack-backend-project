@@ -55,7 +55,7 @@ const getPlacesByUserId = async (req, res, next) => {
 const createPlace = async (req, res, next) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    throw new HttpError("Fields can not be empty!");
+    return next(new HttpError("Fields can not be empty!"));
   }
 
   const { title, description, address, creator } = req.body;
