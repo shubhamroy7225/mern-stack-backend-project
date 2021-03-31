@@ -35,7 +35,7 @@ const signup = async (req, res, next) => {
     name,
     email,
     password,
-    image: "https://homepages.cae.wisc.edu/~ece533/images/girl.png",
+    image: "https://homepages.cae.wisc.edu/~ece533/images/arctichare.png",
     places: [],
   });
   try {
@@ -61,7 +61,7 @@ const signin = async (req, res, next) => {
   } else if (userExist && userExist.password !== password) {
     return next(new HttpError("password in invalid!", 401));
   }
-  res.json({ message: "logged in!" });
+  res.json({ message: "logged in!",user:userExist.toObject({getters:true})});
 };
 exports.getAllUser = getAllUser;
 exports.signin = signin;
