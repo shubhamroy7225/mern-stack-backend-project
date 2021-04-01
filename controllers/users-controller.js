@@ -35,7 +35,7 @@ const signup = async (req, res, next) => {
     name,
     email,
     password,
-    image: "https://homepages.cae.wisc.edu/~ece533/images/arctichare.png",
+    image: req.file.path,
     places: [],
   });
   try {
