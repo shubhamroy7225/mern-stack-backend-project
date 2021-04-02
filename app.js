@@ -41,7 +41,7 @@ app.use((error, req, res, next) => {
 });
 mongoose
   .connect(
-    "mongodb+srv://shubhamjayswal:DhtfcwpMRF1LPJ1t@cluster0.c0vfi.mongodb.net/productDatabase?retryWrites=true&w=majority"
+    "mongodb+srv://shubham:cINE1gIHuzSjDuTk@cluster0.0wmkg.mongodb.net/mernDatabase?retryWrites=true&w=majority"
   )
   .then(() => {
     app.listen(5001);
