@@ -45,7 +45,7 @@ mongoose
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.0wmkg.mongodb.net/mernDatabase?retryWrites=true&w=majority`
   )
   .then(() => {
-    app.listen(5001);
+    app.listen(process.env.PORT || 5001);
     console.log("Connected to database...");
   })
   .catch(() => {
