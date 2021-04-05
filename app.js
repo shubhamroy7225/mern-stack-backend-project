@@ -1,6 +1,5 @@
 const express = require("express");
 require("dotenv").config();
-const cors = require("cors");
 const fs = require("fs");
 const path = require('path')
 const mongoose = require("mongoose");
@@ -8,7 +7,6 @@ const bodyParser = require("body-parser");
 const placesRouter = require("./routes/places.route");
 const usersRouter = require("./routes/users.routes");
 const HttpError = require("./models/http-error");
-const router = require("./routes/users.routes");
 const app = express();
 
 app.use((req, res, next) => {
