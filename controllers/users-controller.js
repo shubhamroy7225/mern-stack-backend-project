@@ -60,7 +60,7 @@ const signup = async (req, res, next) => {
   try {
     token = await jwt.sign(
       { usrId: createUser.id, enail:createUser.email },
-      "Dont_share_itsPrivateKey",
+      process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch(err){
@@ -99,7 +99,7 @@ const signin = async (req, res, next) => {
   try {
     token = await jwt.sign(
       { usrId: userExist.id, enail: userExist.email },
-      "Dont_share_itsPrivateKey",
+      process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
   } catch(err){

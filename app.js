@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const cors = require("cors");
 const fs = require("fs");
 const path = require('path')
@@ -41,7 +42,7 @@ app.use((error, req, res, next) => {
 });
 mongoose
   .connect(
-    "mongodb+srv://shubham:cINE1gIHuzSjDuTk@cluster0.0wmkg.mongodb.net/mernDatabase?retryWrites=true&w=majority"
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.0wmkg.mongodb.net/mernDatabase?retryWrites=true&w=majority`
   )
   .then(() => {
     app.listen(5001);
