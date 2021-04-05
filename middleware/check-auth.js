@@ -5,8 +5,7 @@ module.exports = (req, res, next) => {
     return next();
   }
   try {
-    const token = req.headers.authorization //authorization:'Breer Token'
-    console.log(token);
+    const token = req.headers.authorization; //authorization:'Breer Token'
     if (!token) {
       throw new Error("Authorization failed");
     }

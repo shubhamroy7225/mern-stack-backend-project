@@ -8,7 +8,7 @@ const UserSchema = require("../models/userSchema");
 const getAllUser = async (req, res, next) => {
   let users;
   try {
-    users = await UserSchema.find();
+    users = await UserSchema.find({},'-password');
   } catch (err) {
     const error = new HttpError("Fetching users failed,please try again", 500);
     return next(error);
