@@ -58,7 +58,9 @@ const createPlace = async (req, res, next) => {
     location: coordinates,
     address,
     image: req.file.path,
-    rating:0,
+    total_users_rated:0,
+    sum_of_rating:0,
+    total_rating:0,
     creator: req.userData.userId,
   });
 
@@ -157,14 +159,8 @@ const deletePlaceById = async (req, res, next) => {
   res.json({ message: "place deleted" });
 };
 
-
-let overallRating=0;
 const addRatingByPlaceId= async(req,res,next)=>{
-
   const {rating,id} = req.body
-  if(overallRating === 0){
-    overallRating = rating
-  }
   let place;
   try {
     place = await placeSchema.findById(id);
@@ -172,17 +168,16 @@ const addRatingByPlaceId= async(req,res,next)=>{
     const error = new HttpError("Creating place failed, please try again", 500);
     return next(error);
   }
-  if(place){
-    const totalRating = 478
-    overallRating = ((overallRating*totalRating)+rating)/(totalRating+1)
-  }
-  console.log(place);
   if(!place){
     const error = new HttpError("Creating place failed, please try again", 500);
     return next(error);
   }
-    place.rating = overallRating
-    console.log(place);
+  if(place){
+    place.total_users_rated +=1
+    sum_of_max_rating_of_user_count=place.total_users_rated*5
+    place.sum_of_rating += rating
+    place.total_rating = (place.sum_of_rating*5)/sum_of_max_rating_of_user_count
+  }
   try {
     await place.save();
   } catch (err) {

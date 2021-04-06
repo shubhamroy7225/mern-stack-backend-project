@@ -10,7 +10,9 @@ const placeSchema = new Schema({
     },
     address: {type:String,required:true},
     image:{type:String,required:true},
-    rating:{type:Number},
+    total_users_rated:{type:Number},
+    sum_of_rating:{type:Number},
+    total_rating:{type:Number},
     creator: {type:mongoose.Types.ObjectId,required:true, ref:'users'}
 }) 
 module.exports = mongoose.model('places',placeSchema)
