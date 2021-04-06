@@ -154,8 +154,14 @@ const deletePlaceById = async (req, res, next) => {
   });
   res.json({ message: "place deleted" });
 };
+
+const addRatingByPlaceId=(req,res,next)=>{
+  console.log(req.rating)
+  
+}
 exports.getPlaceById = getPlaceById;
 exports.getPlacesByUserId = getPlacesByUserId;
 exports.createPlace = createPlace;
 exports.updatePlaceById = updatePlaceById;
 exports.deletePlaceById = deletePlaceById;
+exports.addRatingByPlaceId=addRatingByPlaceId

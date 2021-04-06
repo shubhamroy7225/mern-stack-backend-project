@@ -22,4 +22,6 @@ check('description').isLength({min:5}),
 ],
 placeController.updatePlaceById);
 router.delete("/:pid", placeController.deletePlaceById);
+router.patch("/:pid/reviews",
+placeController.addRatingByPlaceId);
 module.exports = router;
