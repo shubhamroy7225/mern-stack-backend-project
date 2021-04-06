@@ -5,6 +5,7 @@ const { getCoordinatesForAddress } = require("../util/location");
 const PlaceSchema = require("../models/placeSchema");
 const UserSchema = require("../models/userSchema");
 const mongoose = require("mongoose");
+const placeSchema = require("../models/placeSchema");
 
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
@@ -57,6 +58,7 @@ const createPlace = async (req, res, next) => {
     location: coordinates,
     address,
     image: req.file.path,
+    rating:0,
     creator: req.userData.userId,
   });
 
@@ -155,10 +157,41 @@ const deletePlaceById = async (req, res, next) => {
   res.json({ message: "place deleted" });
 };
 
-const addRatingByPlaceId=(req,res,next)=>{
-  console.log(req.rating)
-  
+
+let overallRating=0;
+const addRatingByPlaceId= async(req,res,next)=>{
+
+  const {rating,id} = req.body
+  if(overallRating === 0){
+    overallRating = rating
+  }
+  let place;
+  try {
+    place = await placeSchema.findById(id);
+  } catch (err) {
+    const error = new HttpError("Creating place failed, please try again", 500);
+    return next(error);
+  }
+  if(place){
+    const totalRating = 478
+    overallRating = ((overallRating*totalRating)+rating)/(totalRating+1)
+  }
+  console.log(place);
+  if(!place){
+    const error = new HttpError("Creating place failed, please try again", 500);
+    return next(error);
+  }
+    place.rating = overallRating
+    console.log(place);
+  try {
+    await place.save();
+  } catch (err) {
+    const error = new HttpError("could not save your data ", 500);
+    return next(error);
+  }
+  res.json(req.body)
 }
+
 exports.getPlaceById = getPlaceById;
 exports.getPlacesByUserId = getPlacesByUserId;
 exports.createPlace = createPlace;
