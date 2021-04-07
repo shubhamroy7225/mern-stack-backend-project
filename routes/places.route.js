@@ -10,6 +10,10 @@ router.use(checkAuth)
 router.patch("/:pid/reviews",
 placeController.addRatingByPlaceId);
 router.post(
+  "/comments",
+  placeController.createComments
+);
+router.post(
   "/",
   fileUpload.single('image'),
   [check("title").not().isEmpty(),
