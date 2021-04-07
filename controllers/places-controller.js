@@ -7,7 +7,7 @@ const UserSchema = require("../models/userSchema");
 const mongoose = require("mongoose");
 const placeSchema = require("../models/placeSchema");
 const userSchema = require("../models/userSchema");
-
+const { upload } = require("../middleware/multiplefile-uploader");
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
   let place;
@@ -53,12 +53,18 @@ const createPlace = async (req, res, next) => {
 
   const { title, description, address } = req.body;
   const coordinates = getCoordinatesForAddress(address);
+  let imgArray = [];
+  for (let i in req.files) {
+    let obj = {};
+    obj[i] = req.files[i].path;
+    imgArray.push(obj);
+  }
   const createPlace = new PlaceSchema({
     title,
     description,
     location: coordinates,
     address,
-    image: req.file.path,
+    image: imgArray,
     total_users_rated: 0,
     sum_of_rating: 0,
     total_rating: 0,
@@ -90,6 +96,7 @@ const createPlace = async (req, res, next) => {
   }
   res.send(createPlace);
 };
+
 const updatePlaceById = async (req, res, next) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
@@ -199,7 +206,6 @@ const createComments = async (req, res, next) => {
     const error = new HttpError("User not found, please try again", 500);
     return next(error);
   }
-console.log(user)
   let place;
   try {
     place = await placeSchema.findById(id);
@@ -213,11 +219,11 @@ console.log(user)
   }
   if (place && user) {
     let commentData = {
-      userName:user.name,
-      userImage:user.image,
-      userComment:comment,
+      userName: user.name,
+      userImage: user.image,
+      userComment: comment,
     };
-    place.comments.push(commentData)
+    place.comments.push(commentData);
   }
   try {
     await place.save();

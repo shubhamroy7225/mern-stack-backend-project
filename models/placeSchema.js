@@ -9,11 +9,11 @@ const placeSchema = new Schema({
     lng: { type: Number, required: true },
   },
   address: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: Array },
   total_users_rated: { type: Number },
   sum_of_rating: { type: Number },
   total_rating: { type: Number },
-  comments:[],
+  comments: [],
   creator: { type: mongoose.Types.ObjectId, required: true, ref: "users" },
 });
 module.exports = mongoose.model("places", placeSchema);

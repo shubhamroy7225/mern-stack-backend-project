@@ -1,8 +1,8 @@
 const placeController = require("../controllers/places-controller");
 const express = require("express");
 const { check } = require("express-validator");
-const fileUpload = require("../middleware/file-upload");
 const checkAuth = require('../middleware/check-auth')
+const upload = require('../middleware/multiplefile-uploader')
 const router = express.Router();
 router.get("/:pid", placeController.getPlaceById);
 router.get("/user/:uid", placeController.getPlacesByUserId);
@@ -15,7 +15,7 @@ router.post(
 );
 router.post(
   "/",
-  fileUpload.single('image'),
+  upload,
   [check("title").not().isEmpty(),
   check('description').isLength({min:5}),
   check('address').not().isEmpty()
