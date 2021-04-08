@@ -4,7 +4,9 @@ const { check } = require("express-validator");
 const checkAuth = require('../middleware/check-auth')
 const upload = require('../middleware/multiplefile-uploader')
 const router = express.Router();
+router.get("/", placeController.getAllPlaces);
 router.get("/:pid", placeController.getPlaceById);
+
 router.get("/user/:uid", placeController.getPlacesByUserId);
 router.use(checkAuth)
 router.patch("/:pid/reviews",

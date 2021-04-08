@@ -8,6 +8,26 @@ const mongoose = require("mongoose");
 const placeSchema = require("../models/placeSchema");
 const userSchema = require("../models/userSchema");
 const { upload } = require("../middleware/multiplefile-uploader");
+
+const getAllPlaces = async (req, res, next) => {
+  let places;
+  try {
+    places = await PlaceSchema.find();
+  } catch (err) {
+   
+    const error = new HttpError("could not find places", 500);
+    return next(error);
+  }
+  if (!places) {
+    const error = new HttpError(
+      "Could not find a place for the provided id.",
+      404
+    );
+    return next(error);
+  }
+  res.json(places.map((place) => place.toObject({ getters: true })));
+};
+
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
   let place;
@@ -46,27 +66,41 @@ const getPlacesByUserId = async (req, res, next) => {
 };
 
 const createPlace = async (req, res, next) => {
-  console.log(req.body)
+  console.log(req.body);
   const error = validationResult(req);
   if (!error.isEmpty()) {
     return next(new HttpError("Fields can not be empty!"));
   }
 
-  const { title, description, address } = req.body;
+  const {
+    category,
+    title,
+    yourexprience,
+    description,
+    address,
+    city,
+    state,
+    country,
+  } = req.body;
   const coordinates = getCoordinatesForAddress(address);
   let imgArray = [];
   for (let i in req.files) {
     let obj = {};
     obj.original = req.files[i].path;
-    obj.thumbnail=null
+    obj.thumbnail = null;
     imgArray.push(obj);
   }
   const createPlace = new PlaceSchema({
+    category,
     title,
+    image: imgArray,
+    yourexprience,
     description,
     location: coordinates,
     address,
-    image: imgArray,
+    city,
+    state,
+    country,
     total_users_rated: 0,
     sum_of_rating: 0,
     total_rating: 0,
@@ -96,7 +130,7 @@ const createPlace = async (req, res, next) => {
   } catch (err) {
     return next(new HttpError("place data not saved", 500));
   }
-  res.json({message:"place created"});
+  res.json({ message: "place created" });
 };
 
 const updatePlaceById = async (req, res, next) => {
@@ -242,3 +276,4 @@ exports.updatePlaceById = updatePlaceById;
 exports.deletePlaceById = deletePlaceById;
 exports.addRatingByPlaceId = addRatingByPlaceId;
 exports.createComments = createComments;
+exports.getAllPlaces = getAllPlaces;
