@@ -46,6 +46,7 @@ const getPlacesByUserId = async (req, res, next) => {
 };
 
 const createPlace = async (req, res, next) => {
+  console.log(req.body)
   const error = validationResult(req);
   if (!error.isEmpty()) {
     return next(new HttpError("Fields can not be empty!"));
@@ -88,7 +89,7 @@ const createPlace = async (req, res, next) => {
   } catch (err) {
     return next(new HttpError("place data not saved", 500));
   }
-  res.send(createPlace);
+  res.json({message:"place created"});
 };
 const updatePlaceById = async (req, res, next) => {
   const error = validationResult(req);
@@ -199,7 +200,7 @@ const createComments = async (req, res, next) => {
     const error = new HttpError("User not found, please try again", 500);
     return next(error);
   }
-console.log(user)
+  console.log(user);
   let place;
   try {
     place = await placeSchema.findById(id);
@@ -213,11 +214,11 @@ console.log(user)
   }
   if (place && user) {
     let commentData = {
-      userName:user.name,
-      userImage:user.image,
-      userComment:comment,
+      userName: user.name,
+      userImage: user.image,
+      userComment: comment,
     };
-    place.comments.push(commentData)
+    place.comments.push(commentData);
   }
   try {
     await place.save();
