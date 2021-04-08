@@ -56,7 +56,8 @@ const createPlace = async (req, res, next) => {
   let imgArray = [];
   for (let i in req.files) {
     let obj = {};
-    obj[i] = req.files[i].path;
+    obj.original = req.files[i].path;
+    obj.thumbnail=null
     imgArray.push(obj);
   }
   const createPlace = new PlaceSchema({
