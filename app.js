@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
   next();
 });
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use("/api/places", placesRouter);
 app.use("/api/users", usersRouter); 
 app.use('/uploads/images',express.static(path.join('uploads','images')))
