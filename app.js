@@ -22,6 +22,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use("/api/places", placesRouter);
 app.use("/api/users", usersRouter); 
 app.use('/uploads/images',express.static(path.join('uploads','images')))
+app.use('/public/assets',express.static(path.join('public','assets')))
 app.use((req, res, next) => {
   const error = new HttpError("could not find the this routes", 404);
   throw error;
