@@ -3,6 +3,7 @@
         "DB_USER":"shubham",
         "DB_PASSWORD":"cINE1gIHuzSjDuTk",
         "DB_NAME":"mernDatabase",
-        "JWT_KEY":"Dont_share_itsPrivateKey"
+        "JWT_KEY":"Dont_share_itsPrivateKey",
+        "GOOGLE_API_KEY":"AIzaSyD508xD-b8eYunXgCUDpP8p492VZ78ouCo"
     }
 }

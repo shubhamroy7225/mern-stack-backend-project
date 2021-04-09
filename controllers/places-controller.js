@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const fs = require("fs");
 const HttpError = require("../models/http-error");
-const { getCoordinatesForAddress } = require("../util/location");
+const getCoordsForAddress = require("../util/location")
 const PlaceSchema = require("../models/placeSchema");
 const UserSchema = require("../models/userSchema");
 const mongoose = require("mongoose");
@@ -82,7 +82,13 @@ const createPlace = async (req, res, next) => {
     state,
     country,
   } = req.body;
-  const coordinates = getCoordinatesForAddress(address);
+  let coordinates
+  try{
+    coordinates = await getCoordsForAddress(address);
+  }catch(error){
+    return next(error)
+  }
+  
   let imgArray = [];
   for (let i in req.files) {
     let obj = {};
