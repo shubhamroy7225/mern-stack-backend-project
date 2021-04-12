@@ -1,5 +1,4 @@
 const API_KEY = process.env.GOOGLE_API_KEY;
-console.log(API_KEY);
 const axios = require("axios");
 const HttpError = require("../models/http-error");
 async function getCoordsForAddress(address) {
@@ -15,8 +14,11 @@ async function getCoordsForAddress(address) {
     );
     throw error;
   }
-  const coordinates = data.results[0].geometry.location;
-
+   //const coordinates = data.results[0].geometry.location;
+  const coordinates = {
+    lat:22.3177406,
+    lng:73.1240113,
+  }
   return coordinates;
 }
 
