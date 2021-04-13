@@ -82,9 +82,7 @@ const signin = async (req, res, next) => {
   if (!userExist) {
     return next(new HttpError("email not exist", 401));
   }
-  //  else if (userExist && userExist.password !== password) {
-  //   return next(new HttpError("password in invalid!", 401));
-  // }
+
   let isValidPassword = false;
   try {
     isValidPassword = await bcrypt.compare(password, userExist.password);
