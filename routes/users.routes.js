@@ -4,12 +4,16 @@ const usersController = require("../controllers/users-controller");
 const fileUpload = require("../middleware/file-upload");
 const router = express.Router();
 router.get("/",usersController.getAllUser);
+router.get("/:uid",usersController.getUserByUserId);
+router.patch("/:uid/password",usersController.updatePasswordByUserId);
+router.patch("/:uid",fileUpload.single('image'),usersController.updateUserByUserId);
 router.post("/signup", 
 fileUpload.single('image'),
 [check("name").not().isEmpty(),
 check('email').normalizeEmail().isEmail(),
 check('password').isLength({min:6})],
 usersController.signup);
+
 router.post("/login",usersController.signin);
 
 module.exports = router;

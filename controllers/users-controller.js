@@ -8,13 +8,69 @@ const UserSchema = require("../models/userSchema");
 const getAllUser = async (req, res, next) => {
   let users;
   try {
-    users = await UserSchema.find({},'-password');
+    users = await UserSchema.find({}, "-password");
   } catch (err) {
     const error = new HttpError("Fetching users failed,please try again", 500);
     return next(error);
   }
   res.json(users.map((user) => user.toObject({ getters: true })));
 };
+
+const getUserByUserId = async (req, res, next) => {
+  const userId = req.params.uid;
+  let user;
+  try {
+    user = await UserSchema.findById(userId);
+  } catch (err) {
+    const error = new HttpError("could not find user", 500);
+    return next(error);
+  }
+  if (!user) {
+    const error = new HttpError(
+      "Could not find a user for the provided id.",
+      404
+    );
+    return next(error);
+  }
+  res.json(user);
+};
+
+const updateUserByUserId = async (req, res, next) => {
+  const { id, name } = req.body;
+  console.log(req.file.path);
+  let user;
+  try {
+    user = await UserSchema.findById(id);
+  } catch (err) {
+    const error = new HttpError("could not find user", 500);
+    return next(error);
+  }
+  user.name = name;
+  user.image = req.file.path;
+  try {
+    await user.save();
+  } catch (err) {
+    const error = new HttpError("could not update your data ", 500);
+    return next(error);
+  }
+  if (!user) {
+    return next(
+      new HttpError("Could not find a user for the provided user id.", 404)
+    );
+  }
+
+  res.json({ message: "data updated" });
+};
+
+
+
+const updatePasswordByUserId = async(req,res,next)=>{
+  console.log(req,body);
+  const { password } =  req.body;
+ res.json({message:"password updated"})
+
+ 
+}
 
 const signup = async (req, res, next) => {
   const error = validationResult(req);
@@ -59,15 +115,15 @@ const signup = async (req, res, next) => {
   let token;
   try {
     token = await jwt.sign(
-      { usrId: createUser.id, enail:createUser.email },
+      { usrId: createUser.id, enail: createUser.email },
       process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
-  } catch(err){
+  } catch (err) {
     const error = new HttpError("could not save your data ", 500);
     return next(error);
   }
-  res.json({userId:createUser.id, email:createUser.email,token:token});
+  res.json({ userId: createUser.id, email: createUser.email, token: token });
 };
 
 const signin = async (req, res, next) => {
@@ -100,12 +156,15 @@ const signin = async (req, res, next) => {
       process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
-  } catch(err){
+  } catch (err) {
     const error = new HttpError("Failed to login ", 500);
     return next(error);
   }
-  res.json({userId:userExist.id, email:userExist.email,token:token});
+  res.json({ userId: userExist.id, email: userExist.email, token: token });
 };
 exports.getAllUser = getAllUser;
 exports.signin = signin;
 exports.signup = signup;
+exports.getUserByUserId = getUserByUserId;
+exports.updateUserByUserId = updateUserByUserId;
+exports.updatePasswordByUserId = updatePasswordByUserId
