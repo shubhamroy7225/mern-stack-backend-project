@@ -65,11 +65,35 @@ const updateUserByUserId = async (req, res, next) => {
 
 
 const updatePasswordByUserId = async(req,res,next)=>{
-  console.log(req,body);
-  const { password } =  req.body;
+  console.log(req.body);
+  const { id,password } =  req.body;
+  let user;
+  try {
+    user = await UserSchema.findById(id);
+  } catch (err) {
+    const error = new HttpError("could not find user", 500);
+    return next(error);
+  }
+  let hashPassword;
+  try {
+    hashPassword = await bcrypt.hash(password, 12);
+  } catch {
+    const error = new HttpError("Could not create user,please try again", 500);
+    return next(error);
+  }
+  user.password=hashPassword
+  try {
+    await user.save();
+  } catch (err) {
+    const error = new HttpError("could not update your password ", 500);
+    return next(error);
+  }
+  if (!user) {
+    return next(
+      new HttpError("Could not find a user for the provided user id.", 404)
+    );
+  }
  res.json({message:"password updated"})
-
- 
 }
 
 const signup = async (req, res, next) => {
