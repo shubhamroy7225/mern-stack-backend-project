@@ -37,7 +37,7 @@ const getUserByUserId = async (req, res, next) => {
 
 const updateUserByUserId = async (req, res, next) => {
   const { id, name } = req.body;
-  console.log(req.file.path);
+  console.log(req.file);
   let user;
   try {
     user = await UserSchema.findById(id);
@@ -45,8 +45,13 @@ const updateUserByUserId = async (req, res, next) => {
     const error = new HttpError("could not find user", 500);
     return next(error);
   }
-  user.name = name;
-  user.image = req.file.path;
+  if (name) {
+    user.name = name;
+  }
+
+  if (req.file) {
+    user.image = req.file.path;
+  }
   try {
     await user.save();
   } catch (err) {
@@ -62,11 +67,9 @@ const updateUserByUserId = async (req, res, next) => {
   res.json({ message: "data updated" });
 };
 
-
-
-const updatePasswordByUserId = async(req,res,next)=>{
+const updatePasswordByUserId = async (req, res, next) => {
   console.log(req.body);
-  const { id,password } =  req.body;
+  const { id, password } = req.body;
   let user;
   try {
     user = await UserSchema.findById(id);
@@ -81,7 +84,7 @@ const updatePasswordByUserId = async(req,res,next)=>{
     const error = new HttpError("Could not create user,please try again", 500);
     return next(error);
   }
-  user.password=hashPassword
+  user.password = hashPassword;
   try {
     await user.save();
   } catch (err) {
@@ -93,8 +96,8 @@ const updatePasswordByUserId = async(req,res,next)=>{
       new HttpError("Could not find a user for the provided user id.", 404)
     );
   }
- res.json({message:"password updated"})
-}
+  res.json({ message: "password updated" });
+};
 
 const signup = async (req, res, next) => {
   const error = validationResult(req);
@@ -191,4 +194,4 @@ exports.signin = signin;
 exports.signup = signup;
 exports.getUserByUserId = getUserByUserId;
 exports.updateUserByUserId = updateUserByUserId;
-exports.updatePasswordByUserId = updatePasswordByUserId
+exports.updatePasswordByUserId = updatePasswordByUserId;
